@@ -36,65 +36,75 @@ function Booking() {
     fetchShow();
   }, [id]);
 
-  if (loading) return <div>Loading...</div>;
-  if (!show) return <div>Show not found.</div>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-[#0F0C29] via-[#302B63] to-[#24243e] text-white">
+        <div className="text-xl font-semibold animate-pulse">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!show) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-[#0F0C29] via-[#302B63] to-[#24243e] text-red-400">
+        <div className="text-xl font-semibold">Show not found.</div>
+      </div>
+    );
+  }
 
   return (
     <>
-      {/* Internal CSS for modern UI */}
+      <div className="min-h-screen flex items-center justify-center px-4 py-10 bg-gradient-to-br from-[#0F0C29] via-[#302B63] to-[#24243e] font-sans text-white">
+        <div className="w-full max-w-4xl p-8 md:p-12 rounded-3xl shadow-xl bg-white/5 backdrop-blur-lg border border-purple-500/20 animate-fadeIn transform transition duration-500 hover:scale-[1.01]">
+          
+          {/* Title */}
+          <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-4 tracking-tight text-white drop-shadow-md">
+            🎟️ Book Tickets
+          </h2>
+          <p className="text-center text-lg text-purple-300 mb-6">
+            {show.title} <span className="text-sm text-purple-200">({show.date} @ {show.time})</span>
+          </p>
+
+          {/* Image + SeatSelector */}
+          <div className="flex flex-col md:flex-row gap-8 items-center justify-between">
+            <img
+              src={show.image || 'https://via.placeholder.com/400x300'}
+              alt={show.title}
+              className="w-full md:w-1/2 h-64 object-cover rounded-2xl shadow-lg border border-white/10"
+            />
+            <div className="w-full md:w-1/2">
+              <SeatSelector showId={show.id} price={show.price} />
+            </div>
+          </div>
+
+          {/* Call to Action */}
+          <div className="text-center mt-8">
+            <button className="bg-gradient-to-r from-purple-600 to-purple-400 text-white px-6 py-3 rounded-2xl font-semibold shadow-lg hover:scale-105 transition duration-300">
+              Proceed to Payment
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Animation */}
       <style>
         {`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-
-          .booking-container {
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(to right, #eef2f3, #cfd9df);
-            padding: 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-
-          .booking-box {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            width: 100%;
-            max-width: 800px;
-          }
-
-          .booking-title {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #1a202c;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            animation: fadeInUp 0.6s ease-out;
-          }
-
-          @keyframes fadeInUp {
+          @keyframes fadeIn {
             from {
               opacity: 0;
-              transform: translateY(20px);
+              transform: translateY(40px);
             }
             to {
               opacity: 1;
               transform: translateY(0);
             }
           }
+
+          .animate-fadeIn {
+            animation: fadeIn 0.8s ease-out both;
+          }
         `}
       </style>
-
-      <div className="booking-container">
-        <div className="booking-box">
-          <h2 className="booking-title">
-            Book Tickets for: {show.title} ({show.date} @ {show.time})
-          </h2>
-          <SeatSelector showId={show.id} price={show.price} />
-        </div>
-      </div>
     </>
   );
 }

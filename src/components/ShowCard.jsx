@@ -9,69 +9,75 @@ function ShowCard({ show }) {
       <style>
         {`
           .show-card {
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
           }
 
           .show-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
           }
 
           .show-image {
             width: 100%;
             height: 250px;
             object-fit: cover;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
           }
 
           .show-content {
-            padding: 16px;
+            padding: 20px;
+            color: #ffffff;
           }
 
           .show-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #222;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #ffffff;
           }
 
           .show-description {
             font-size: 0.95rem;
-            color: #555;
+            color: #e0e0e0;
             margin-bottom: 10px;
-            line-height: 1.4;
+            line-height: 1.5;
           }
 
           .show-datetime {
             font-size: 0.85rem;
-            color: #777;
-            margin-bottom: 6px;
+            color: #bbbbbb;
+            margin-bottom: 8px;
           }
 
           .show-price {
-            font-size: 0.9rem;
-            color: #1a8f42;
-            font-weight: 500;
-            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: #32cd86;
+            font-weight: 600;
+            margin-bottom: 12px;
           }
 
           .show-link {
             display: inline-block;
-            background-color: #4f46e5;
-            color: white;
-            padding: 10px 16px;
-            border-radius: 6px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
             font-size: 0.95rem;
             text-decoration: none;
-            transition: background-color 0.3s ease;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.2s ease;
           }
 
           .show-link:hover {
-            background-color: #4338ca;
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+            transform: scale(1.05);
           }
         `}
       </style>
