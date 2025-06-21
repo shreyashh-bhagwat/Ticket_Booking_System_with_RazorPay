@@ -14,52 +14,148 @@ function Register() {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await sendEmailVerification(userCredential.user);
-      alert('Registration successful! Please verify your email.');
+      alert('✅ Registration successful! Please check your email to verify your account.');
       navigate('/login');
     } catch (err) {
-      setError(err.message);
+      setError('❌ ' + err.message);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-        <form onSubmit={handleRegister} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+    <>
+      <style>
+        {`
+          @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+          .register-container {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(120deg, #dbe6f6, #c5796d);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+          }
+
+          .register-box {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+          }
+
+          .register-title {
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1a2a6c;
+            margin-bottom: 1.5rem;
+          }
+
+          .form-label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+            color: #333;
+          }
+
+          .form-input {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            margin-bottom: 1.2rem;
+            transition: border-color 0.3s ease;
+          }
+
+          .form-input:focus {
+            border-color: #4f46e5;
+            outline: none;
+          }
+
+          .form-button {
+            width: 100%;
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.7rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+          }
+
+          .form-button:hover {
+            background-color: #4338ca;
+          }
+
+          .register-error {
+            color: #e53e3e;
+            background-color: #ffe5e5;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 1rem;
+          }
+
+          .form-footer {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 1rem;
+          }
+
+          .form-footer a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+          }
+
+          .form-footer a:hover {
+            text-decoration: underline;
+          }
+        `}
+      </style>
+
+      <div className="register-container">
+        <div className="register-box">
+          <h2 className="register-title">Register</h2>
+          {error && <div className="register-error">{error}</div>}
+
+          <form onSubmit={handleRegister}>
+            <label className="form-label">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="form-input"
               required
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+
+            <label className="form-label">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="form-input"
               required
             />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
-          >
-            Register
-          </button>
-        </form>
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Already have an account?{' '}
-          <a href="/login" className="text-indigo-600 hover:underline">Login</a>
-        </p>
+
+            <button type="submit" className="form-button">Register</button>
+          </form>
+
+          <p className="form-footer">
+            Already have an account? <a href="/login">Login</a>
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

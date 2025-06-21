@@ -19,150 +19,112 @@ function Navbar() {
     navigate('/login');
   };
 
-  // Premium color palette and glass effect styles
-  const navStyles = {
-    background: 'rgba(25, 35, 70, 0.7)', // Deep blue with transparency for glass effect
-    backdropFilter: 'blur(10px)', // Glassmorphism blur effect
-    WebkitBackdropFilter: 'blur(10px)', // Safari fallback
-    color: '#ffffff', // White text
-    padding: '1rem',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
-    borderBottom: '1px solid rgba(255, 255, 255, 0.1)', // Frosted border
-  };
-
-  const containerStyles = {
-    maxWidth: '80rem', // Professional wide layout
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '0 2rem', // Increased padding for elegance
-  };
-
-  const linkStyles = {
-    fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', // Modern, professional font
-    fontSize: '1.25rem', // text-xl
-    fontWeight: '600', // Slightly lighter bold for professionalism
-    textDecoration: 'none',
-    color: '#ffffff',
-    transition: 'color 0.3s ease, text-decoration 0.3s ease', // Smooth transitions
-  };
-
-  const hoverLinkStyles = {
-    color: '#d4af37', // Gold accent for premium feel
-    textDecoration: 'underline',
-  };
-
-  const welcomeStyles = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '2rem', // Increased spacing for a premium look
-  };
-
-  const buttonStyles = {
-    fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-    background: 'none',
-    border: 'none',
-    color: '#ffffff',
-    cursor: 'pointer',
-    padding: '0.5rem 1rem', // More padding for a button-like feel
-    borderRadius: '4px', // Slight rounding for elegance
-    transition: 'color 0.3s ease, background-color 0.3s ease',
-    textDecoration: 'none',
-  };
-
-  const buttonHoverStyles = {
-    color: '#d4af37', // Gold on hover
-    backgroundColor: 'rgba(212, 175, 55, 0.1)', // Subtle gold background
-    textDecoration: 'underline',
-  };
-
   return (
-    <nav style={navStyles}>
-      <div style={containerStyles}>
-        <Link
-          to="/"
-          style={linkStyles}
-          onMouseOver={(e) => {
-            e.target.style.color = hoverLinkStyles.color;
-            e.target.style.textDecoration = hoverLinkStyles.textDecoration;
-          }}
-          onMouseOut={(e) => {
-            e.target.style.color = linkStyles.color;
-            e.target.style.textDecoration = 'none';
-          }}
-        >
-          Ticket Booking
-        </Link>
-        <div style={welcomeStyles}>
-          <Link
-            to="/"
-            style={linkStyles}
-            onMouseOver={(e) => {
-              e.target.style.color = hoverLinkStyles.color;
-              e.target.style.textDecoration = hoverLinkStyles.textDecoration;
-            }}
-            onMouseOut={(e) => {
-              e.target.style.color = linkStyles.color;
-              e.target.style.textDecoration = 'none';
-            }}
-          >
-            Home
+    <>
+      {/* Internal CSS for modern navbar styling */}
+      <style>
+        {`
+          @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+          .navbar {
+            font-family: 'Poppins', sans-serif;
+            background: rgba(25, 35, 70, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: #ffffff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+          }
+
+          .nav-left a {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+          }
+
+          .nav-left svg {
+            height: 24px;
+            fill: #ffffff;
+          }
+
+          .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+          }
+
+          .nav-link, .logout-btn {
+            font-weight: 500;
+            font-size: 1rem;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            background: none;
+            cursor: pointer;
+          }
+
+          .nav-link:hover, .logout-btn:hover {
+            color: #fcd34d;
+            text-decoration: underline;
+          }
+
+          .welcome-text {
+            color: #e5e5e5;
+            font-size: 0.95rem;
+          }
+
+          @media (max-width: 768px) {
+            .navbar {
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 1rem;
+            }
+
+            .nav-right {
+              flex-wrap: wrap;
+              gap: 1rem;
+            }
+          }
+        `}
+      </style>
+
+      <nav className="navbar">
+        <div className="nav-left">
+          <Link to="/">
+            {/* Simple SVG logo icon */}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M9 3v2H4v14h16V5h-5V3h7v18H2V3h7z" />
+            </svg>
+            TicketBooking
           </Link>
+        </div>
+        <div className="nav-right">
+          <Link to="/" className="nav-link">Home</Link>
           {user ? (
             <>
-              <span style={{ fontFamily: '"Inter", sans-serif', fontSize: '1rem', color: '#e0e0e0' }}>
-                Welcome, {user.email}
-              </span>
-              <button
-                onClick={handleLogout}
-                style={buttonStyles}
-                onMouseOver={(e) => Object.assign(e.target.style, buttonHoverStyles)}
-                onMouseOut={(e) => {
-                  e.target.style.color = buttonStyles.color;
-                  e.target.style.backgroundColor = buttonStyles.background;
-                  e.target.style.textDecoration = buttonStyles.textDecoration;
-                }}
-              >
-                Logout
-              </button>
+              <span className="welcome-text">Welcome, {user.email}</span>
+              <button className="logout-btn" onClick={handleLogout}>Logout</button>
             </>
           ) : (
             <>
-              <Link
-                to="/login"
-                style={linkStyles}
-                onMouseOver={(e) => {
-                  e.target.style.color = hoverLinkStyles.color;
-                  e.target.style.textDecoration = hoverLinkStyles.textDecoration;
-                }}
-                onMouseOut={(e) => {
-                  e.target.style.color = linkStyles.color;
-                  e.target.style.textDecoration = 'none';
-                }}
-              >
-                Login
-              </Link>
-              <Link
-                to="/register"
-                style={linkStyles}
-                onMouseOver={(e) => {
-                  e.target.style.color = hoverLinkStyles.color;
-                  e.target.style.textDecoration = hoverLinkStyles.textDecoration;
-                }}
-                onMouseOut={(e) => {
-                  e.target.style.color = linkStyles.color;
-                  e.target.style.textDecoration = 'none';
-                }}
-              >
-                Register
-              </Link>
+              <Link to="/login" className="nav-link">Login</Link>
+              <Link to="/register" className="nav-link">Register</Link>
             </>
           )}
         </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 }
 

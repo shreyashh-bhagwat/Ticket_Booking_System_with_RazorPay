@@ -13,7 +13,7 @@ function Home() {
       try {
         const showsCollection = collection(db, 'shows');
         const showsSnapshot = await getDocs(showsCollection);
-        const showsList = showsSnapshot.docs.map(doc => {
+        const showsList = showsSnapshot.docs.map((doc) => {
           const data = doc.data();
           return {
             id: doc.id,
@@ -34,70 +34,91 @@ function Home() {
     fetchShows();
   }, []);
 
-  // Internal CSS styles as JavaScript objects
-  const containerStyles = {
-    minHeight: '100vh',
-    backgroundColor: '#f5f7fa', // Light gray for a premium background
-    paddingTop: '2rem',
-    paddingBottom: '2rem',
-  };
-
-  const titleStyles = {
-    fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-    fontSize: '1.875rem', // Slightly larger for emphasis
-    fontWeight: '700',
-    textAlign: 'center',
-    marginBottom: '2rem',
-    color: '#1a2a6c', // Deep blue for professionalism
-  };
-
-  const gridStyles = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(1, minmax(0, 1fr))',
-    gap: '1.5rem', // Increased gap for elegance
-    paddingLeft: '1rem',
-    paddingRight: '1rem',
-    '@media (min-width: 640px)': { // sm breakpoint
-      gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-    },
-    '@media (min-width: 768px)': { // md breakpoint
-      gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-    },
-    '@media (min-width: 1024px)': { // lg breakpoint
-      gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-    },
-  };
-
-  const loadingStyles = {
-    minHeight: '100vh',
-    backgroundColor: '#f5f7fa',
-    paddingTop: '2rem',
-    paddingBottom: '2rem',
-    textAlign: 'center',
-    color: '#666666', // Neutral gray for loading text
-  };
-
-  const errorStyles = {
-    minHeight: '100vh',
-    backgroundColor: '#f5f7fa',
-    paddingTop: '2rem',
-    paddingBottom: '2rem',
-    textAlign: 'center',
-    color: '#e53e3e', // Red for error message
-  };
-
-  if (loading) return <div style={loadingStyles}>Loading...</div>;
-  if (error) return <div style={errorStyles}>{error}</div>;
-
   return (
-    <div style={containerStyles}>
-      <h1 style={titleStyles}>Now Showing</h1>
-      <div style={gridStyles}>
-        {shows.map(show => (
-          <ShowCard key={show.id} show={show} />
-        ))}
+    <>
+      {/* Internal CSS styles */}
+      <style>
+        {`
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+          .home-container {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background-color: #f4f6fb;
+            padding: 2rem 1rem;
+          }
+
+          .banner {
+            width: 100%;
+            max-height: 280px;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+          }
+
+          .banner img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            display: block;
+          }
+
+          .home-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a2a6c;
+            margin-bottom: 2rem;
+          }
+
+          .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+          }
+
+          .loading,
+          .error {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #666;
+            font-size: 1.2rem;
+          }
+
+          .error {
+            color: #e53e3e;
+          }
+        `}
+      </style>
+
+      <div className="home-container">
+        {/* Banner Image / Slider */}
+        <div className="banner">
+          <img
+            src="https://149512919.v2.pressablecdn.com/wp-content/uploads/2021/12/philly-movies-hero-banner.jpg"
+            alt="Banner Advertisement"
+          />
+        </div>
+
+        <h1 className="home-title">Now Showing</h1>
+
+        {loading ? (
+          <div className="loading">Loading...</div>
+        ) : error ? (
+          <div className="error">{error}</div>
+        ) : (
+          <div className="card-grid">
+            {shows.map((show) => (
+              <ShowCard key={show.id} show={show} />
+            ))}
+          </div>
+        )}
       </div>
-    </div>
+    </>
   );
 }
 

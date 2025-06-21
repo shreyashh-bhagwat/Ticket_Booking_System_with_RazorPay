@@ -1,20 +1,48 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { addDoc, collection } from 'firebase/firestore';
+import { useParams, useLocation } from 'react-router-dom';
+import { doc, getDoc, addDoc, collection } from 'firebase/firestore';
 import { db } from '../firebase';
 
 function Checkout() {
+  const { id } = useParams();
+  const location = useLocation();
+  const [show, setShow] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const location = useLocation();
-  const show = location.state?.show || { id: 'defaultShowId', price: 1 };
-  const pricePerSeat = show.price || 1;
 
   useEffect(() => {
-    const seats = location.state?.selectedSeats || [1];
-    setSelectedSeats(seats);
-    setTotalPrice(seats.length * pricePerSeat);
-  }, [location.state, pricePerSeat]);
+    const fetchShow = async () => {
+      try {
+        const showDoc = doc(db, 'shows', id);
+        const showSnapshot = await getDoc(showDoc);
+        if (showSnapshot.exists()) {
+          const data = showSnapshot.data();
+          const seats = location.state?.selectedSeats || [];
+          const price = data.price || 1;
+
+          setShow({
+            id: showSnapshot.id,
+            ...data,
+            price,
+            date: data.date?.toDate?.().toLocaleDateString() || '',
+            time: data.time || '',
+          });
+
+          setSelectedSeats(seats);
+          setTotalPrice(seats.length * price);
+        } else {
+          console.error('Show not found');
+        }
+      } catch (error) {
+        console.error('Error fetching show:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchShow();
+  }, [id, location.state]);
 
   const handlePayment = () => {
     const amountInPaise = Math.round(totalPrice * 100);
@@ -30,33 +58,33 @@ function Checkout() {
     }
 
     const options = {
-      key: 'rzp_test_L26VIOCFHsgOjT', // ✅ Razorpay Test Key
+      key: 'rzp_test_L26VIOCFHsgOjT',
       amount: amountInPaise,
       currency: 'INR',
       name: 'Ticket Booking App',
       description: 'Movie Ticket Booking',
       handler: async (response) => {
         try {
-          alert(`Payment ID: ${response.razorpay_payment_id}`);
-          alert('Payment Successful');
+          alert(`✅ Payment Successful!\nPayment ID: ${response.razorpay_payment_id}`);
 
           await addDoc(collection(db, 'bookings'), {
-            userId: 'testUserId', // 🔁 Replace with actual auth.currentUser.uid
+            userId: 'testUserId',
             showId: show.id,
             seats: selectedSeats.length,
+            selectedSeats,
             totalPrice,
             paymentId: response.razorpay_payment_id,
             timestamp: new Date(),
           });
 
-          alert('Booking saved to Firestore successfully!');
+          alert('📥 Booking saved to Firestore!');
         } catch (err) {
           console.error('Firestore Error:', err);
-          alert('Payment succeeded but failed to save booking.');
+          alert('Payment succeeded but saving failed.');
         }
       },
       prefill: {
-        email: 'shreyashbhagwat505@gmail.com', // 🔁 Replace with auth.currentUser.email
+        email: 'shreyashbhagwat505@gmail.com',
       },
       theme: {
         color: '#4f46e5',
@@ -69,25 +97,110 @@ function Checkout() {
     const rzp = new window.Razorpay(options);
     rzp.on('payment.failed', (error) => {
       console.error('Payment Failed:', error.error);
-      alert('Payment failed: ' + error.error.description);
+      alert('❌ Payment failed: ' + error.error.description);
     });
     rzp.open();
   };
 
+  if (loading) return <div>Loading checkout info...</div>;
+  if (!show) return <div>Show not found.</div>;
+
   return (
-    <div className="min-h-screen bg-gray-100 py-8">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold mb-4">Checkout</h2>
-        <p>Selected Seats: {selectedSeats.length}</p>
-        <p>Total Price: ₹{totalPrice}</p>
-        <button
-          onClick={handlePayment}
-          className="mt-4 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
-        >
-          Pay Now
-        </button>
+    <>
+      <style>
+        {`
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+          .checkout-container {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(to right, #eef2f3, #d9e2ec);
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+          .checkout-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+          }
+
+          @media (min-width: 768px) {
+            .checkout-box {
+              flex-direction: row;
+              align-items: center;
+            }
+          }
+
+          .poster {
+            width: 100%;
+            max-width: 250px;
+            border-radius: 12px;
+            object-fit: cover;
+          }
+
+          .checkout-info {
+            flex: 1;
+          }
+
+          .checkout-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1a202c;
+          }
+
+          .checkout-details {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+          }
+
+          .pay-btn {
+            margin-top: 1.5rem;
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+          }
+
+          .pay-btn:hover {
+            background-color: #4338ca;
+          }
+        `}
+      </style>
+
+      <div className="checkout-container">
+        <div className="checkout-box">
+          <img
+            src={show.poster || 'https://via.placeholder.com/250x375'}
+            alt={show.title}
+            className="poster"
+          />
+          <div className="checkout-info">
+            <h2 className="checkout-title">{show.title}</h2>
+            <p className="checkout-details">🎟 Selected Seats: <strong>{selectedSeats.length}</strong></p>
+            <p className="checkout-details">📅 {show.date} 🕒 {show.time}</p>
+            <p className="checkout-details">💰 Total Price: <strong>₹{totalPrice}</strong></p>
+            <button className="pay-btn" onClick={handlePayment}>
+              Pay Now
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

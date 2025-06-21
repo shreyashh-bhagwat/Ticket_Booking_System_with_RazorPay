@@ -12,56 +12,147 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      if (!userCredential.user.emailVerified) {
-        setError('Please verify your email before logging in.');
-        return;
-      }
+      await signInWithEmailAndPassword(auth, email, password);
       navigate('/');
     } catch (err) {
-      setError(err.message);
+      setError('❌ ' + err.message);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+    <>
+      {/* Internal styles */}
+      <style>
+        {`
+          @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+          .login-container {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(120deg, #f5f7fa, #c3cfe2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+          }
+
+          .login-box {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+          }
+
+          .login-title {
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1a2a6c;
+          }
+
+          .login-form label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+            color: #333;
+          }
+
+          .login-form input {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border 0.3s ease;
+            margin-bottom: 1rem;
+          }
+
+          .login-form input:focus {
+            border-color: #4f46e5;
+            outline: none;
+          }
+
+          .login-btn {
+            width: 100%;
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.7rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+          }
+
+          .login-btn:hover {
+            background-color: #4338ca;
+          }
+
+          .login-error {
+            color: #e53e3e;
+            background-color: #ffe5e5;
+            padding: 0.5rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            text-align: center;
+          }
+
+          .login-footer {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #555;
+          }
+
+          .login-footer a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+          }
+
+          .login-footer a:hover {
+            text-decoration: underline;
+          }
+        `}
+      </style>
+
+      <div className="login-container">
+        <div className="login-box">
+          <h2 className="login-title">Login</h2>
+          {error && <div className="login-error">{error}</div>}
+
+          <form className="login-form" onSubmit={handleLogin}>
+            <label>Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               required
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+
+            <label>Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               required
             />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
-          >
-            Login
-          </button>
-        </form>
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account?{' '}
-          <a href="/register" className="text-indigo-600 hover:underline">Register</a>
-        </p>
+
+            <button type="submit" className="login-btn">Login</button>
+          </form>
+
+          <p className="login-footer">
+            Don't have an account? <a href="/register">Register</a>
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
